@@ -1,0 +1,29 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: "learning-studio"
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: learning-studio/package-lock.json
+      - name: npm CI
+        run: npm ci
+      - name: linting
+        run: npm run lint
+      - name: TS Typecheck
+        run: npm run typecheck
+      - run: npm test
+      - run: npm run build
